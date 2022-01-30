@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class Post {
+public class Post extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
