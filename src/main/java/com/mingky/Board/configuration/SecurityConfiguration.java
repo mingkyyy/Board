@@ -24,6 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+
                 .authorizeRequests()
                 .mvcMatchers("/")
                 .permitAll()
@@ -34,17 +35,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/", true)
 
                 .and()
-                .logout()
-                .logoutUrl("/")
-                .invalidateHttpSession(true)
-                .logoutSuccessUrl("/")
-
-                .and()
                 .csrf().disable()
                 .headers().frameOptions().disable()
+
                 .and()
                 .authorizeRequests()
                 .antMatchers("/h2-console/**")
-                .permitAll();
+                .permitAll()
+
+
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .logoutSuccessUrl("/");
+
+
     }
 }
