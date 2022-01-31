@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main-layout}">
+<head>
+    <script th:src="@{/js.member/signup.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="py-5 text-center">
+        <h2>회원 가입</h2>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-offset-3">
+            <div class="form-group">
+                <label>이름</label>
+                <input type="text" th:name="name" th:id="name" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>이메일</label>
+                <input type="email" th:name="email" th:id="email" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>닉네임</label>
+                <input type="text" th:name="nickname" th:id="nickname" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>비밀번호</label>
+                <input type="password" th:name="password" th:id="password" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>비밀번호 확인</label>
+                <input type="password" th:name="repassword" th:id="repassword" class="form-control">
+            </div>
+
+            <div class="row g-2 justify-content-center">
+                <button class="w-50 btn btn-dark btn-lg" type="button" th:id="signup" th:name="signup">회원가입</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
