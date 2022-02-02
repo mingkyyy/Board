@@ -9,7 +9,9 @@
 <body>
 <div layout:fragment="content">
 <h1>메인페이지</h1>
+    <h3 th:text="${message}"></h3>
 <button><a th:href="@{/signup}">회원가입</a></button>
+<button><a th:href="@{/login}">로그인</a></button>
 </div>
 </body>
 </html>

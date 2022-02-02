@@ -1,5 +1,6 @@
 package com.mingky.Board.configuration;
 
+import com.mingky.Board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +11,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private final MemberService memberService;
+    private final DataSource dataSource;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -31,6 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
 
                 .authorizeRequests()
@@ -43,8 +52,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/", true)
 
                 .and()
-                .csrf().disable()
-                .headers().frameOptions().disable()
+                .rememberMe()
+                .userDetailsService(memberService)
+                .tokenRepository(tokenRepository())
+
 
                 .and()
                 .authorizeRequests()
@@ -56,8 +67,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/")
+
+                .and()
+                .csrf().disable()
+                .headers().frameOptions().disable();
 
 
+    }
+
+    @Bean
+    public PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+
+        jdbcTokenRepository.setDataSource(dataSource);
+        return jdbcTokenRepository;
     }
 }

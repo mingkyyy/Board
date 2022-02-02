@@ -20,4 +20,6 @@ public class MemberController {
         signupDto.setPassword(passwordEncoder.encode(signupDto.getPassword()));
         return memberService.save(signupDto);
     }
+
+
 }
