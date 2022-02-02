@@ -1,5 +1,6 @@
 package com.mingky.Board.configuration;
 
+import com.mingky.Board.service.CustomOAuth2UserService;
 import com.mingky.Board.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -23,6 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final MemberService memberService;
     private final DataSource dataSource;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -70,8 +72,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
 
                 .and()
-                .csrf().disable()
-                .headers().frameOptions().disable();
+                .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService);
+
+        http.cors().and();
+        http.csrf().disable();
 
 
     }

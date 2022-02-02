@@ -11,13 +11,7 @@ public class MainController {
 
     @GetMapping("/")
     public String index(Model model, @CurrentMember Member member){
-        String message = "안녕하세요, 손님!";
-        if(member != null){
-            message = "안녕하세요, " + member.getName() + "님!";
-        }
         model.addAttribute("member", member);
-        model.addAttribute("message", message);
-
         return "index";
     }
 
