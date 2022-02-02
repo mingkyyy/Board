@@ -3,6 +3,7 @@ package com.mingky.Board.controller;
 import com.mingky.Board.domain.Member;
 import com.mingky.Board.dto.SignupDto;
 import com.mingky.Board.repository.MemberRepository;
+import com.mingky.Board.service.MemberService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.support.SimpleTriggerContext;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -25,6 +26,9 @@ public class MemberControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -58,7 +62,9 @@ public class MemberControllerTest {
         List<Member> all = memberRepository.findAll();
         assertThat(all.get(0).getEmail()).isEqualTo(email);
         assertThat(all.get(0).getName()).isEqualTo(name);
-        assertThat(all.get(0).getPassword()).isEqualTo(password);
+        assertThat(passwordEncoder.matches(password, all.get(0).getPassword()));
         assertThat(all.get(0).getNickname()).isEqualTo(nickname);
     }
+
+
 }
