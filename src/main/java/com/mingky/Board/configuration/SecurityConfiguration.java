@@ -72,13 +72,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
 
                 .and()
+                .csrf().disable()
+                .headers().frameOptions().disable()
+
+                .and()
                 .oauth2Login()
                 .loginPage("/login")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
-
-        http.cors().and();
-        http.csrf().disable();
 
 
     }
