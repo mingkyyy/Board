@@ -65,6 +65,8 @@ public class MemberControllerTest {
         memberRepository.deleteAll();
     }
 
+
+
     @Test
     public void 회원가입_테스트() throws Exception{
         String name = "김민경";
@@ -95,8 +97,10 @@ public class MemberControllerTest {
 
 
 
-    @BeforeEach
-    public void setup(){
+
+
+    @Test
+    public void 로그인_테스트() throws Exception{
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(this.context)
                 .apply(springSecurity())
@@ -110,11 +114,7 @@ public class MemberControllerTest {
                 .build();
 
         memberRepository.save(member);
-    }
 
-
-    @Test
-    public void 로그인_테스트() throws Exception{
         String username = "test@test.com";
         String password = "12345";
 
