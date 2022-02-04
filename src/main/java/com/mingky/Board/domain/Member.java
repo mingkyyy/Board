@@ -32,7 +32,7 @@ public class Member {
     @Column(nullable = false)
     private String nickname;
 
-    private String phone;
+    private String tel;
 
     @Enumerated(EnumType.STRING)
     private MemberType memberType;

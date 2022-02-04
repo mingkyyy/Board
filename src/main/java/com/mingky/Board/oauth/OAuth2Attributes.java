@@ -71,6 +71,7 @@ public class OAuth2Attributes {
                 .memberType(MemberType.ROLE_JUN)
                 .password("{noop}")
                 .nickname(name)
+                .tel("{noop}")
                 .name(name)
                 .build();
     }

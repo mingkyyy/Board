@@ -18,15 +18,18 @@ public class SignupDto {
 
     private String password;
 
+    private String tel;
+
 
 
 
     @Builder
-    public SignupDto(String name, String email, String nickname, String password){
+    public SignupDto(String name, String email, String nickname, String password, String tel){
         this.name = name;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+        this.tel = tel;
     }
 
 
@@ -36,6 +39,7 @@ public class SignupDto {
                 .email(email)
                 .nickname(nickname)
                 .password(password)
+                .tel(tel)
                 .memberType(MemberType.ROLE_JUN)
                 .build();
     }
