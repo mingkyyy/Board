@@ -2,7 +2,53 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<th:block th:fragment="headerFragment">
+<th:block th:fragment="headerFragment(activeTab)">
+<header>
+    <div class="jumbotron jumbotron-fluid bg-dark">
+        <div class="container banner" style="color:ivory">
+            <h1 class="lead">&#8220;The best books… <br/>are those that tell you what you know already.&#8221;
+            </h1>
+            <p>– George Orwell</p>
+        </div>
+    </div>
+
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/" th:href="@{/}">My Board</a>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item" th:classappend="${activeTab == 'login'} ? active" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/login}">로그인</a>
+                </li>
+
+
+                <li class="nav-item"><a class="nav-link" th:href="@{/signup}"
+                                        th:classappend="${activeTab == 'signup'} ? active">회원가입</a></li>
+
+
+                <li class="nav-item" th:classappend="${activeTab == 'logout'} ? active" sec:authorize="isAuthenticated()">
+                    <form class="form-inline" th:action="@{/logout}" th:method="post">
+                        <button class="nav-link btn btn-dark" type="submit" >로그아웃</button>
+                    </form>
+                </li>
+
+
+
+                <li th:if="${member != null}" class="nav-item" th:classappend="${activeTab == 'mypage'} ? active"
+                    sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{'/mypage/' + ${member.nickname}}" th:text="${member.nickname}">내 정보</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </nav>
+
+</header>
+</th:block>
+</header>
 </th:block>
 
 
@@ -20,7 +66,7 @@
         <p class="footer-menu-items footer-menu-items-2">&nbsp;&nbsp;|&nbsp;&nbsp;</p>
         <p class="footer-menu-items footer-menu-items-2">개인정보취급방침</p>
 
-        <p class="footer-menu-items footer-menu-items-3">&copy;Mega IT 4th Team1</p>
+        <p class="footer-menu-items footer-menu-items-3">&copy;김민경</p>
     </footer>
 </th:block>
 </html>
