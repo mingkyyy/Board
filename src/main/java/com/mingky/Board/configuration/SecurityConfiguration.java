@@ -48,6 +48,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/")
                 .permitAll()
 
+                .antMatchers("/board/free/write")
+                .authenticated()
+
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -63,6 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/h2-console/**")
                 .permitAll()
+
 
 
                 .and()

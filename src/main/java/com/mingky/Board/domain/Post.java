@@ -33,8 +33,8 @@ public class Post extends BaseTimeEntity{
     @ManyToMany
     private List<Member> likers;
 
-    @Enumerated(EnumType.STRING)
-    private PostType postType;
+   @Enumerated(EnumType.STRING)
+    private Category category;
 
     private int report;
 

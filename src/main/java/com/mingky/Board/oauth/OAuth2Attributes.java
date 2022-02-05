@@ -68,7 +68,7 @@ public class OAuth2Attributes {
     public Member toMember(){
         return Member.builder()
                 .email(email)
-                .memberType(MemberType.ROLE_JUN)
+                .memberType(MemberType.ROLE_MEMBER)
                 .password("{noop}")
                 .nickname(name)
                 .tel("{noop}")

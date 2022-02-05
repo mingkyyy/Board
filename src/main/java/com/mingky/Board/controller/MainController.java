@@ -36,4 +36,19 @@ public class MainController {
         model.addAttribute("member", member);
         return "member/mypage";
     }
+
+    @GetMapping("/board/free")
+    public String freeBoard(@CurrentMember Member member){
+        return "/board/free/list";
+    }
+
+    @GetMapping("/board/animal/{category}")
+    public String animalBoard(@CurrentMember Member member, @PathVariable String category){
+        return "/board/animal/list";
+    }
+
+    @GetMapping("/board/free/write")
+    public String freeWrite(@CurrentMember Member member){
+        return "/board/free/write";
+    }
 }
