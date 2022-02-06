@@ -30,8 +30,8 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long save(SignupDto signupDto) {
-        return memberRepository.save(signupDto.toEntity()).getId();
+    public Member save(SignupDto signupDto) {
+        return memberRepository.save(signupDto.toEntity());
     }
 
     @Override

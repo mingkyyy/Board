@@ -41,11 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class MemberControllerTest {
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -65,42 +60,8 @@ public class MemberControllerTest {
         memberRepository.deleteAll();
     }
 
-
-
-    @Test
-    public void 회원가입_테스트() throws Exception{
-        String name = "김민경";
-        String password = "1234";
-        String nickname = "mingkyy";
-        String email = "mingkyy12@gmail.com";
-
-        SignupDto signupDto = SignupDto.builder()
-                .name(name)
-                .password(password)
-                .nickname(nickname)
-                .email(email)
-                .build();
-
-        String url = "http://localhost:"+port+"/signup";
-
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, signupDto, Long.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0L);
-
-        List<Member> all = memberRepository.findAll();
-        assertThat(all.get(0).getEmail()).isEqualTo(email);
-        assertThat(all.get(0).getName()).isEqualTo(name);
-        assertThat(passwordEncoder.matches(password, all.get(0).getPassword()));
-        assertThat(all.get(0).getNickname()).isEqualTo(nickname);
-    }
-
-
-
-
-
-    @Test
-    public void 로그인_테스트() throws Exception{
+    @BeforeEach
+    public void createRepository() throws Exception{
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(this.context)
                 .apply(springSecurity())
@@ -110,10 +71,31 @@ public class MemberControllerTest {
                 .email("test@test.com")
                 .nickname("mi")
                 .password(passwordEncoder.encode("12345"))
-                .memberType(MemberType.ROLE_JUN)
+                .tel("01000000000")
+                .memberType(MemberType.ROLE_MEMBER)
                 .build();
 
         memberRepository.save(member);
+    }
+
+
+
+    @Test
+    public void 회원가입_테스트() throws Exception{
+        String email = "test@test.com";
+        String name = "mingkyy";
+        String password="12345";
+        String nickname="mi";
+
+        List<Member> all = memberRepository.findAll();
+        assertThat(all.get(0).getEmail()).isEqualTo(email);
+        assertThat(all.get(0).getName()).isEqualTo(name);
+        assertThat(passwordEncoder.matches(password, all.get(0).getPassword()));
+        assertThat(all.get(0).getNickname()).isEqualTo(nickname);
+    }
+
+    @Test
+    public void 로그인_테스트() throws Exception{
 
         String username = "test@test.com";
         String password = "12345";
