@@ -38,7 +38,7 @@ $(function () {
                 data: JSON.stringify(data)
             }).done(function (){
                 alert("글쓰기가 완료되었습니다.");
-                window.location.href='/';
+                window.location.href='/board/free';
             }).fail(function (error){
                 alert(JSON.stringify(error));
             })

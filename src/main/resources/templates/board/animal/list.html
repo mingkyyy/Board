@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main-layout}" th:with="activeTab='animal'">
+<head>
+
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="py-5 text-center">
+        <h2>동물 자랑 게시판 ㅎㅇㅎㅇ</h2>
+        <h2 th:if="${category.equals('dog')}">강아지 자랑 게시판 ㅎㅇㅎㅇ</h2>
+        <h2 th:if="${category.equals('cat')}">고양이 자랑 게시판 ㅎㅇㅎㅇ</h2>
+        <h2 th:if="${category.equals('ham')}">햄스터 자랑 게시판 ㅎㅇㅎㅇ</h2>
+        <h2 th:if="${category.equals('all')}">전체 자랑 게시판 ㅎㅇㅎㅇ</h2>
+        <h2 th:if="${category.equals('other')}">기타 자랑 게시판 ㅎㅇㅎㅇ</h2>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
