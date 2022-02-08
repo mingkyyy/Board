@@ -49,4 +49,8 @@ public class Member {
         if (like == null) like = new ArrayList<>();
     }
 
+    public void addLike(Post post) {
+        like.add(post);
+    }
+
 }

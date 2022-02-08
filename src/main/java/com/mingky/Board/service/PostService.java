@@ -1,6 +1,7 @@
 package com.mingky.Board.service;
 
 import com.mingky.Board.domain.Category;
+import com.mingky.Board.domain.Member;
 import com.mingky.Board.domain.Post;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.PostRepository;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,6 @@ public class PostService {
     }
 
 
-
     public Page<Post> findCategoryPage(Category free, Pageable pageable) {
         return postRepository.findByCategory(free, pageable);
     }
@@ -32,4 +32,5 @@ public class PostService {
     public Post findRead(long id) {
         return postRepository.findById(id).orElseThrow();
     }
+
 }

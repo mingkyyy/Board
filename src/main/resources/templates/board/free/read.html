@@ -11,10 +11,37 @@
 
 </head>
 <body>
-<div layout:fragment="content" class="d-flex justify-content-center">
-    <container>
-        <h2 th:text="${post.title}">상세 페이지</h2>
-    </container>
+<div layout:fragment="content" class="justify-center-center">
+    <div style="position: relative; width: 70%; left: 15%; border: 1px solid black">
+        <div style="position: relative; width: 70%; left: 8%;">
+            <br><br>
+            <div th:text="${post.category}" style="color: lightgray"></div>
+            <div>
+                <span th:text="${post.title}" style="font-size: 30px;"></span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span th:text="${post.write.nickname}"></span>
+                &nbsp;&nbsp;&nbsp;
+                <span th:text="${#temporals.format(post.createDate,'yyyy-MM-dd HH:mm:ss')}">
+                </span>
+            </div>
+            <hr>
+            <div th:utext="${post.content}">
+                <br><br>
+            </div>
+            <button type="button" class="like"
+                    style="border:0px; outline:0px;background-color:transparent;"
+                    th:id="like" th:value="${post.id}">
+                <img th:src="@{ ${member?.like?.contains(post)} ?  '/images/like_red.svg' : '/images/like.svg'}"
+                     th:id="${post.id}" th:width="20" th:height="20"></button>
+            <span th:text="${post.likers.size}" th:id="likeNum+${post.id}"></span>
+
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+
 </div>
 </body>
 </html>
