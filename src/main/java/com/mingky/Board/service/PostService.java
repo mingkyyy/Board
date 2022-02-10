@@ -23,6 +23,7 @@ public class PostService {
 
     @Transactional
     public Long freeSave(FreeWriteDto freeWriteDto) {
+
         return postRepository.save(freeWriteDto.freeWrite()).getId();
     }
 
@@ -48,5 +49,11 @@ public class PostService {
             member.addLike(post);
             return "addLike";
         }
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        postRepository.delete(post);
     }
 }

@@ -47,6 +47,12 @@ public class PostController {
         return map;
     }
 
+    @DeleteMapping("/board/free/read/{id}")
+    public Long boardDelete(@PathVariable Long id){
+        postService.delete(id);
+        return id;
+    }
+
 }
 
 

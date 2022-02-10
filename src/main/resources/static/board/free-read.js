@@ -28,4 +28,22 @@ $(function () {
         })
 
     });
+
+    $('.deleteFree').click(function (){
+       let id = $(this).val();
+       if (confirm("삭제 하겠습니까?")){
+           $.ajax({
+               type: 'DELETE',
+               URL:'/board/free/read/'+id,
+               dataType: 'json',
+           }).done(function (){
+               alert("삭제 완료 했습니다.");
+               window.location.href='/board/free';
+           }).fail(function (error){
+               alert(JSON.stringify(error));
+           })
+       }else {
+
+       }
+    });
 });

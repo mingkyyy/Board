@@ -129,6 +129,8 @@ public class MainController {
     @GetMapping("/board/free/read/{id}")
     public String freeRead(Model model, @PathVariable Long id, @CurrentMember Member member){
         Post post = postService.findRead(id);
+        post.setHit(post.getHit()+1);
+        postRepository.save(post);
         model.addAttribute("post",post);
         model.addAttribute("member", member);
         return "/board/free/read";

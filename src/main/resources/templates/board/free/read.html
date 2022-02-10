@@ -21,9 +21,16 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <span th:text="${post.write.nickname}"></span>
                 &nbsp;&nbsp;&nbsp;
+                <span th:text="조회수 +${post.hit}"></span>
+                &nbsp;&nbsp;&nbsp;
                 <span th:text="${#temporals.format(post.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">
                 </span>
             </div>
+
+            <span th:if="${post.write.id} == ${member.id}">
+                        <button type="button" th:id="deleteFree" th:value="${post.id}" class="deleteFree"
+                                style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
+                    </span>
             <hr>
             <div th:utext="${post.content}">
                 <br><br>
