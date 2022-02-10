@@ -30,7 +30,7 @@ public class Post extends BaseTimeEntity{
     @ManyToOne
     private Member write;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "like", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Member> likers;
 
    @Enumerated(EnumType.STRING)

@@ -8,7 +8,7 @@
     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
 
-
+    <script th:src="@{/board/free-read.js}"></script>
 </head>
 <body>
 <div layout:fragment="content" class="justify-center-center">
@@ -21,7 +21,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <span th:text="${post.write.nickname}"></span>
                 &nbsp;&nbsp;&nbsp;
-                <span th:text="${#temporals.format(post.createDate,'yyyy-MM-dd HH:mm:ss')}">
+                <span th:text="${#temporals.format(post.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">
                 </span>
             </div>
             <hr>
@@ -31,8 +31,9 @@
             <button type="button" class="like"
                     style="border:0px; outline:0px;background-color:transparent;"
                     th:id="like" th:value="${post.id}">
-                <img th:src="@{ ${member?.like?.contains(post)} ?  '/images/like_red.svg' : '/images/like.svg'}"
-                     th:id="${post.id}" th:width="20" th:height="20"></button>
+                <img th:src="@{ ${member?.like?.contains(post)}  ?  '/images/like_red.svg' : '/images/like.svg'}"
+                     th:id="${post.id}" th:width="20" th:height="20">
+            </button>
             <span th:text="${post.likers.size}" th:id="likeNum+${post.id}"></span>
 
 

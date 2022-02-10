@@ -40,7 +40,7 @@ public class Member {
     @OneToMany(mappedBy = "write", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    @ManyToMany(mappedBy = "likers")
+    @ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Post> like;
 
     @PostLoad
