@@ -1,13 +1,12 @@
 package com.mingky.Board.controller;
 
 import com.mingky.Board.domain.Member;
-import com.mingky.Board.domain.Post;
+import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.PostRepository;
 import com.mingky.Board.service.PostService;
 import com.mingky.Board.util.CurrentMember;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -51,6 +50,11 @@ public class PostController {
     public Long boardDelete(@PathVariable Long id){
         postService.delete(id);
         return id;
+    }
+
+    @PutMapping("/board/free/read/{id}")
+    public Long freeUpdate(@RequestBody FreeUpdateDto freeUpdateDto, @PathVariable Long id){
+       return postService.update(freeUpdateDto, id);
     }
 
 }

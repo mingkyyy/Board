@@ -146,4 +146,10 @@ public class MainController {
         return "/board/free/write";
     }
 
+    @GetMapping("/board/free/update/{id}")
+    public String freeUpdate(Model model,@CurrentMember Member member, @PathVariable Long id){
+        Post post = postRepository.findById(id).orElseThrow();
+        model.addAttribute("post", post);
+        return "/board/free/update";
+    }
 }

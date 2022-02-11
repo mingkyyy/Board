@@ -30,7 +30,10 @@
             <span th:if="${post.write.id} == ${member.id}">
                         <button type="button" th:id="deleteFree" th:value="${post.id}" class="deleteFree"
                                 style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
+                <a th:href="@{'/board/free/update/'+${post.id}}">수정</a>
                     </span>
+
+
             <hr>
             <div th:utext="${post.content}">
                 <br><br>

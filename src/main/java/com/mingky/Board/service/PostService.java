@@ -3,6 +3,7 @@ package com.mingky.Board.service;
 import com.mingky.Board.domain.Category;
 import com.mingky.Board.domain.Member;
 import com.mingky.Board.domain.Post;
+import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.repository.PostRepository;
@@ -37,15 +38,14 @@ public class PostService {
     }
 
 
-
     @Transactional
     public String boardLike(Member member, Long id) {
         member = memberRepository.findById(member.getId()).orElseThrow();
         Post post = postRepository.findById(id).orElseThrow();
-        if (member.getLike().contains(post) == true){
+        if (member.getLike().contains(post) == true) {
             member.getLike().remove(post);
             return "deleteLike";
-        }else {
+        } else {
             member.addLike(post);
             return "addLike";
         }
@@ -55,5 +55,15 @@ public class PostService {
     public void delete(Long id) {
         Post post = postRepository.findById(id).orElseThrow();
         postRepository.delete(post);
+    }
+
+
+    @Transactional
+    public Long update(FreeUpdateDto freeUpdateDto, Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        post.setContent(freeUpdateDto.getContent());
+        post.setTitle(freeUpdateDto.getTitle());
+        postRepository.save(post);
+        return id;
     }
 }
