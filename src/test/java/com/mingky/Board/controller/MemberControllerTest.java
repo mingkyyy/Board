@@ -88,10 +88,10 @@ public class MemberControllerTest {
         String nickname="mi";
 
         List<Member> all = memberRepository.findAll();
-        assertThat(all.get(0).getEmail()).isEqualTo(email);
-        assertThat(all.get(0).getName()).isEqualTo(name);
-        assertThat(passwordEncoder.matches(password, all.get(0).getPassword()));
-        assertThat(all.get(0).getNickname()).isEqualTo(nickname);
+        assertThat(all.get(1).getEmail()).isEqualTo(email);
+        assertThat(all.get(1).getName()).isEqualTo(name);
+        assertThat(passwordEncoder.matches(password, all.get(1).getPassword()));
+        assertThat(all.get(1).getNickname()).isEqualTo(nickname);
     }
 
     @Test

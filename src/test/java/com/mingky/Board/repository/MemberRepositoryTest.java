@@ -38,7 +38,7 @@ public class MemberRepositoryTest {
 
         List<Member> memberList = memberRepository.findAll();
 
-        Member member = memberList.get(0);
+        Member member = memberList.get(1);
         assertThat(member.getName()).isEqualTo(name);
         assertThat(member.getEmail()).isEqualTo(email);
         assertThat(member.getPassword()).isEqualTo(password);

@@ -2,6 +2,7 @@ package com.mingky.Board.domain;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "write", cascade = CascadeType.ALL)
     private List<Post> posts;
 

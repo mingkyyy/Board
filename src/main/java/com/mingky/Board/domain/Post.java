@@ -4,6 +4,7 @@ package com.mingky.Board.domain;
 import javax.persistence.*;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class Post extends BaseTimeEntity{
     private String content;
 
     @ManyToOne
+    @JsonBackReference
     private Member write;
 
     @ManyToMany(mappedBy = "like", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
