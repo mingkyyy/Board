@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mingky.Board.domain.*;
+import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.repository.PostRepository;
@@ -30,6 +31,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.http.RequestEntity.post;
+import static org.springframework.http.RequestEntity.put;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -144,6 +146,42 @@ public class PostControllerTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 
+
+    }
+
+    @Test
+    public void 게시물_수정() throws  Exception{
+        List<Member> memberList = memberRepository.findAll();
+        Post post = postRepository.save(Post.builder()
+                .title("title")
+                .content("content")
+                .category(Category.FREE)
+                .build());
+
+        post.setWrite(memberList.get(0));
+        postRepository.save(post);
+
+        Long updateId = post.getId();
+        String newTitle = "newTitle";
+        String newContent = "newContent";
+
+        FreeUpdateDto freeUpdateDto = FreeUpdateDto
+                .builder()
+                .title(newTitle)
+                .content(newContent)
+                .build();
+
+        String url = "http://localhost:"+port+"/board/free/read/"+updateId;
+
+        mvc.perform(MockMvcRequestBuilders.put(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().registerModule(new JavaTimeModule())
+                        .writeValueAsString(freeUpdateDto))
+        ).andExpect(status().isOk());
+
+        List<Post> all = postRepository.findAll();
+        assertThat(all.get(all.size()-1).getTitle()).isEqualTo(newTitle);
+        assertThat(all.get(all.size()-1).getContent()).isEqualTo(newContent);
 
     }
 }
