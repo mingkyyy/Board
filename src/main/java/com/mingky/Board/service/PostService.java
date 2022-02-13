@@ -3,6 +3,7 @@ package com.mingky.Board.service;
 import com.mingky.Board.domain.Category;
 import com.mingky.Board.domain.Member;
 import com.mingky.Board.domain.Post;
+import com.mingky.Board.dto.AnimalWriteDto;
 import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.MemberRepository;
@@ -13,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.NoSuchElementException;
 
 @Service
@@ -66,4 +70,35 @@ public class PostService {
         postRepository.save(post);
         return id;
     }
+
+    public  void CookieHit(Long id, HttpServletRequest request, HttpServletResponse response){
+        Post post = postRepository.findById(id).orElseThrow();
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null){
+            for (Cookie cookie : cookies){
+                if (cookie.getName().equals("postView")){
+                    oldCookie = cookie;
+                }
+            }
+        }
+        if (oldCookie != null){
+            if (!oldCookie.getValue().contains("["+id.toString()+"]")){
+                post.setHit(post.getHit()+1);
+                oldCookie.setValue(oldCookie.getValue() + "_[" + id + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+            }
+        }else {
+            post.setHit(post.getHit()+1);
+            Cookie newCookie = new Cookie("postView","[" + id + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(newCookie);
+        }
+        postRepository.save(post);
+    }
+
+
 }

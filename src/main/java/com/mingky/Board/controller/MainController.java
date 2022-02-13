@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -127,10 +129,9 @@ public class MainController {
     }
 
     @GetMapping("/board/free/read/{id}")
-    public String freeRead(Model model, @PathVariable Long id, @CurrentMember Member member){
+    public String freeRead(Model model, @PathVariable Long id, @CurrentMember Member member, HttpServletRequest request, HttpServletResponse response){
         Post post = postService.findRead(id);
-        post.setHit(post.getHit()+1);
-        postRepository.save(post);
+        postService.CookieHit(id,request,response);
         model.addAttribute("post",post);
         model.addAttribute("member", member);
         return "/board/free/read";
@@ -152,4 +153,5 @@ public class MainController {
         model.addAttribute("post", post);
         return "/board/free/update";
     }
+
 }
