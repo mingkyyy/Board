@@ -1,10 +1,8 @@
 package com.mingky.Board.controller;
 
-import com.mingky.Board.domain.Category;
-import com.mingky.Board.domain.Member;
-import com.mingky.Board.domain.MemberType;
-import com.mingky.Board.domain.Post;
+import com.mingky.Board.domain.*;
 import com.mingky.Board.dto.SignupDto;
+import com.mingky.Board.repository.CommentRepository;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.repository.PostRepository;
 import com.mingky.Board.service.MemberService;
@@ -31,6 +29,9 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -42,6 +43,7 @@ public class MainController {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     @PostConstruct
     @Transactional
@@ -132,15 +134,14 @@ public class MainController {
     public String freeRead(Model model, @PathVariable Long id, @CurrentMember Member member, HttpServletRequest request, HttpServletResponse response){
         Post post = postService.findRead(id);
         postService.CookieHit(id,request,response);
+        List<Comment> commentList = commentRepository.findByPost(post);
+        Collections.reverse(commentList);
         model.addAttribute("post",post);
         model.addAttribute("member", member);
+        model.addAttribute("commentList",commentList);
         return "/board/free/read";
     }
 
-    @GetMapping("/board/animal/{category}")
-    public String animalBoard(@CurrentMember Member member, @PathVariable String category){
-        return "/board/animal/list";
-    }
 
     @GetMapping("/board/free/write")
     public String freeWrite(@CurrentMember Member member){

@@ -1,25 +1,18 @@
 package com.mingky.Board.controller;
 
-import com.mingky.Board.domain.Category;
-import com.mingky.Board.domain.File;
 import com.mingky.Board.domain.Member;
-import com.mingky.Board.dto.AnimalWriteDto;
+import com.mingky.Board.dto.CommentDto;
 import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.PostRepository;
+import com.mingky.Board.service.CommentService;
 import com.mingky.Board.service.PostService;
 import com.mingky.Board.util.CurrentMember;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +20,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostRepository postRepository;
+    private final CommentService commentService;
 
     @PostMapping("/free/write")
     public Long freeSave(@RequestBody FreeWriteDto freeWriteDto, @CurrentMember Member member) {
@@ -66,15 +60,9 @@ public class PostController {
         return id;
     }
 
-    @PostMapping("/animal/write")
-    public Long freeSave(@RequestBody AnimalWriteDto animalWriteDto, @CurrentMember Member member) {
-        animalWriteDto.setMember(member);
 
-        return postService.animalSave(animalWriteDto);
-    }
+
 
 
 
 }
-
-

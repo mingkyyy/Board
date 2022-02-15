@@ -13,7 +13,7 @@
 <body>
 <div layout:fragment="content" class="justify-center-center">
     <div style="position: relative; width: 70%; left: 15%; border: 1px solid black">
-        <div style="position: relative; width: 70%; left: 8%;">
+        <div style="position: relative; width: 70%; left: 15%;">
             <br><br>
             <div th:text="${post.category}" style="color: lightgray"></div>
             <div>
@@ -32,8 +32,6 @@
                                 style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
                 <a th:href="@{'/board/free/update/'+${post.id}}">수정</a>
                     </span>
-
-
             <hr>
             <div th:utext="${post.content}">
                 <br><br>
@@ -41,15 +39,40 @@
             <button type="button" class="like"
                     style="border:0px; outline:0px;background-color:transparent;"
                     th:id="like" th:value="${post.id}">
+
                 <img th:src="@{ ${member?.like?.contains(post)}  ?  '/images/like_red.svg' : '/images/like.svg'}"
                      th:id="${post.id}" th:width="20" th:height="20">
+
             </button>
             <span th:text="${post.likers.size}" th:id="likeNum+${post.id}"></span>
+            <br>
+            <hr>
 
+            <!--            댓글-->
+            <div>
+                <img th:src="@{/images/comment.png}" th:width="18" th:height="18">
+                <span th:text="${commentList.size()}"></span>
+                <br>
+                <br>
+                <div class="input-group mb-3">
+                    <input type="hidden" th:value="${post.id}" th:id="postId">
+                    <input type="text" class="form-control" id="comment" name="comment" placeholder="댓글을 입력하세요">
+                    <button class="btn btn-outline-secondary" type="button" th:id="commentButton">작성</button>
+                </div>
 
+                <!-- 댓글 리스트-->
+                <div th:each="comment : ${commentList}">
+                    <span style="font-size: 17px" th:text="${comment.nickname}"></span> &nbsp;&nbsp;&nbsp;
+                    <span style="color: lightgray"
+                          th:text="${#temporals.format(comment.modifiedDate,'yyyy-MM-dd HH:mm:ss')}"></span>
+                    <br>
+                    <span style="word-wrap:break-word;" th:text="${comment.comment}"></span>
+                    <br>
+                    <br>
+                </div>
+            </div>
         </div>
     </div>
-    <br>
     <br>
     <br>
 

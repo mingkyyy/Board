@@ -46,4 +46,28 @@ $(function () {
 
        }
     });
+
+    $('#commentButton').click(function (){
+
+        let comment = $('#comment').val();
+        let id = $('#postId').val();
+
+        if (comment == ''){
+            alert("댓글 내용을 입력해주세요");
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url:'/board/comment/'+id,
+            dataType:'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(comment)
+        }).done(function (){
+            alert("댓글 완료");
+            window.location.href='/board/free/read/'+id;
+        }).fail(function (error){
+            alert(JSON.stringify(error));
+        })
+
+    })
 });

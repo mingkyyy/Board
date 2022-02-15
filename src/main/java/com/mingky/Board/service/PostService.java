@@ -3,7 +3,6 @@ package com.mingky.Board.service;
 import com.mingky.Board.domain.Category;
 import com.mingky.Board.domain.Member;
 import com.mingky.Board.domain.Post;
-import com.mingky.Board.dto.AnimalWriteDto;
 import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.MemberRepository;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
