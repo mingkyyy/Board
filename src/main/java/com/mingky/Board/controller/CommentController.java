@@ -6,10 +6,7 @@ import com.mingky.Board.service.CommentService;
 import com.mingky.Board.util.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +20,11 @@ public class CommentController {
             member) {
         return commentService.saveComment(commentDto, id, member);
 
+    }
 
+    @DeleteMapping("/board/free/comment/{id}")
+    public Long commentDelete(@PathVariable Long id){
+        return commentService.deleteComment(id);
     }
 
 }

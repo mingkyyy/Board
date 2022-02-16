@@ -20,8 +20,8 @@ public class Comment extends BaseTimeEntity implements Serializable {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String comment;
 
-    @Column(nullable = false)
-    private String nickname;
+    @ManyToOne
+    private Member commentWriter;
 
     @ManyToOne
     private Post post;

@@ -23,9 +23,16 @@ public class CommentService {
         Post post = postRepository.findById(id).orElseThrow();
         commentRepository.save(Comment.builder()
                         .comment(commentDto.getComment())
-                        .nickname(member.getNickname())
+                        .commentWriter(member)
                         .post(post)
                 .build());
+        return id;
+    }
+
+
+    public Long deleteComment(Long id) {
+        Comment comment = commentRepository.findById(id).orElseThrow();
+        commentRepository.delete(comment);
         return id;
     }
 }
