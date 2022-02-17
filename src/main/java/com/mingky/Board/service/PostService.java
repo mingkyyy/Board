@@ -63,8 +63,7 @@ public class PostService {
     @Transactional
     public Long update(FreeUpdateDto freeUpdateDto, Long id) {
         Post post = postRepository.findById(id).orElseThrow();
-        post.setContent(freeUpdateDto.getContent());
-        post.setTitle(freeUpdateDto.getTitle());
+        post.update(freeUpdateDto.getTitle(), freeUpdateDto.getContent());
         postRepository.save(post);
         return id;
     }
@@ -82,14 +81,14 @@ public class PostService {
         }
         if (oldCookie != null){
             if (!oldCookie.getValue().contains("["+id.toString()+"]")){
-                post.setHit(post.getHit()+1);
+                post.hitAdd(post.getHit()+1);
                 oldCookie.setValue(oldCookie.getValue() + "_[" + id + "]");
                 oldCookie.setPath("/");
                 oldCookie.setMaxAge(60 * 60 * 24);
                 response.addCookie(oldCookie);
             }
         }else {
-            post.setHit(post.getHit()+1);
+            post.hitAdd(post.getHit()+1);
             Cookie newCookie = new Cookie("postView","[" + id + "]");
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 24);

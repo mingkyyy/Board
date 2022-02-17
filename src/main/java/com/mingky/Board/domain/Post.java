@@ -12,7 +12,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -55,6 +54,15 @@ public class Post extends BaseTimeEntity{
         if (comments == null) comments = new ArrayList<>();
         if (likers == null) likers = new ArrayList<>();
         if (uploadFile == null) uploadFile = new ArrayList<>();
+    }
+
+    public void update(String title, String content){
+        this.content = content;
+        this.title = title;
+    }
+
+    public void hitAdd(int hit){
+        this.hit = hit;
     }
 
 
