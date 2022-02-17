@@ -22,9 +22,14 @@ public class CommentController {
 
     }
 
-    @DeleteMapping("/board/free/comment/{id}")
+    @DeleteMapping("/board/comment/{id}")
     public Long commentDelete(@PathVariable Long id){
         return commentService.deleteComment(id);
+    }
+
+    @PutMapping("/board/comment/{id}")
+    public Long commentUpdate(@PathVariable Long id, @RequestBody CommentDto commentDto){
+        return commentService.updateComment(commentDto, id);
     }
 
 }

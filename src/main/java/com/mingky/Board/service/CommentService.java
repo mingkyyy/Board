@@ -10,6 +10,7 @@ import com.mingky.Board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.event.spi.PostCollectionRecreateEvent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
@@ -34,5 +35,14 @@ public class CommentService {
         Comment comment = commentRepository.findById(id).orElseThrow();
         commentRepository.delete(comment);
         return id;
+    }
+
+    @Transactional
+    public Long updateComment(CommentDto commentDto, Long id) {
+
+        Comment comment = commentRepository.findById(id).orElseThrow();
+        comment.update(commentDto.getComment());
+        return id;
+
     }
 }

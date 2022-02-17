@@ -9,6 +9,22 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
 
     <script th:src="@{/board/free-read.js}"></script>
+
+    <style>
+        .updateButton{
+            color:  #6c757d;
+            border-color: lightgray;
+            border-width: 2px;
+            background-color: white;
+            width: 60px;
+            border-radius: 6px;
+        }
+
+        .updateButton:hover{
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content" class="justify-center-center">
@@ -73,10 +89,18 @@
                     <span th:if="${comment.commentWriter.id} == ${member.id}">
                         <button type="button" th:id="deleteComment" th:value="${comment.id}" class="deleteComment"
                                 style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
+
+                           <button type="button" th:id="updateComment" th:value="${comment.id}" class="updateComment"
+                                   style="background-color: transparent; border: 0; outline: 0; color: red">수정</button>
                     </span>
 
                     <br>
-                    <span style="word-wrap:break-word;" th:text="${comment.comment}"></span>
+                    <span  style="word-wrap:break-word;" th:text="${comment.comment}" th:id="commentText + ${comment.id}"></span>
+
+                    <div class="input-group mb-3" style="display: none" th:id="updateDiv + ${comment.id}">
+                        <input type="text" class="form-control" th:value="${comment.comment}" th:id="commentUpdateValue + ${comment.id}" name="commentUpdate">
+                        <button class="updateButton" th:value="${comment.id}" type="button"  th:id="commentUpdateButton">수정</button>
+                    </div>
 
                     <br>
                     <br>

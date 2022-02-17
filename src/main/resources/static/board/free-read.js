@@ -1,3 +1,6 @@
+
+
+
 $(function () {
     $(".like").click(function () { // 좋아요 하는 기능
         let id = $(this).val();
@@ -27,6 +30,41 @@ $(function () {
         })
     });
 
+    $('.updateComment').click(function () {
+        let id = $(this).val();
+        if ($('#updateDiv' + id).css("display") == "none") {
+            $('#updateDiv' + id).css("display", "");
+        } else {
+            $('#updateDiv' + id).css("display", "none");
+        }
+    });
+
+    $('.updateButton').click(function () {
+        let id = $(this).val();
+        let data = $('#commentUpdateValue' + id).val();
+
+        if (data == ''){
+            alert("수정할 댓글 내용을 입력하세요");
+            return false;
+        }
+
+        $.ajax({
+            type: 'PUT',
+            url: '/board/comment/' + id,
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: 'json'
+        }).done(function () {
+            alert("수정 완료 하였습니다.");
+            $('#updateDiv' + id).css("display", "none");
+            $('#commentText'+ id).text(data);
+
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        })
+    });
+
+
     $('.deleteComment').click(function () {
         let id = $(this).val();
         let post = $('#postId').val();
@@ -34,7 +72,7 @@ $(function () {
         if (confirm("댓글을 삭제 하겠습니까?")) {
             $.ajax({
                 type: 'DELETE',
-                url: '/board/free/comment/' + id,
+                url: '/board/comment/' + id,
                 dataType: 'json'
             }).done(function () {
                 alert("댓글 삭제 완료되었습니다.");

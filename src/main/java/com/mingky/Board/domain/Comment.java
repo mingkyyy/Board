@@ -28,6 +28,8 @@ public class Comment extends BaseTimeEntity implements Serializable {
 
     private long parentComment;
 
-
+    public void update(String comment){
+        this.comment = comment;
+    }
 
 }
