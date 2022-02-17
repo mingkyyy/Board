@@ -1,7 +1,6 @@
-
-
-
 $(function () {
+  
+
     $(".like").click(function () { // 좋아요 하는 기능
         let id = $(this).val();
 
@@ -30,6 +29,16 @@ $(function () {
         })
     });
 
+    $('.reComment').click(function (){
+        let id = $(this).val();
+        if ($('#reCommentDiv' + id).css("display") == "none") {
+            $('#reCommentDiv' + id).css("display", "");
+        } else {
+            $('#reCommentDiv' + id).css("display", "none");
+        }
+    });
+
+
     $('.updateComment').click(function () {
         let id = $(this).val();
         if ($('#updateDiv' + id).css("display") == "none") {
@@ -38,6 +47,8 @@ $(function () {
             $('#updateDiv' + id).css("display", "none");
         }
     });
+
+
 
     $('.updateButton').click(function () {
         let id = $(this).val();
@@ -103,12 +114,44 @@ $(function () {
         }
     });
 
+
+    $('.reCommentButton').click(function (){
+        let id = $('#postId').val();
+        let commentId = $(this).val();
+
+        let data = {
+            comment : $('#recommentValue'+commentId).val(),
+            parentComment : $(this).val()
+        };
+
+        if ($('#recommentValue'+id).val()== '') {
+            alert("댓글 내용을 입력해주세요");
+            return false;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/board/comment/' + id,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function () {
+            alert("댓글 완료");
+            window.location.href = '/board/free/read/' + id;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        })
+
+    });
+
     $('#commentButton').click(function () {
 
-        let comment = $('#comment').val();
-        let id = $('#postId').val();
-
-        if (comment == '') {
+        let id = $('#postId').val(); //post id
+        let data = {
+            comment : $('#comment').val(),
+            parentComment : -1
+        };
+        if ($('#comment').val()== '') {
             alert("댓글 내용을 입력해주세요");
             return false;
         }
@@ -117,7 +160,7 @@ $(function () {
             url: '/board/comment/' + id,
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(comment)
+            data: JSON.stringify(data)
         }).done(function () {
             alert("댓글 완료");
             window.location.href = '/board/free/read/' + id;
@@ -125,5 +168,5 @@ $(function () {
             alert(JSON.stringify(error));
         })
 
-    })
+    });
 });

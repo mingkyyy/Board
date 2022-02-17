@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -57,6 +56,10 @@ public class Member {
 
     public void addLike(Post post) {
         like.add(post);
+    }
+
+    public void findName(String name){
+        this.name = name;
     }
 
 }

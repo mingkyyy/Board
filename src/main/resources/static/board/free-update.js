@@ -21,6 +21,18 @@ $(function () {
             content : $('#summernote').val()
         };
 
+        if ($('#title').val()==''){
+            alert("제목을 입력하세요");
+            $('#title').focus();
+            return false;
+        }
+
+        if ($('#summernote').val()==''){
+            alert("내용을 입력하세요");
+            $('#summernote').focus();
+            return false;
+        }
+
         $.ajax({
             type : 'PUT',
             url:'/board/free/read/'+id,
@@ -29,7 +41,7 @@ $(function () {
             data: JSON.stringify(data)
         }).done(function (){
             alert("수정 완료 되었습니다.");
-            window.location.href='/board/free';
+            window.location.href='/board/free/read/'+id;
         }).fail(function (error){
             alert(JSON.stringify(error));
         })

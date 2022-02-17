@@ -4,16 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CommentDto {
+public class CommentUpdateDto {
     private String comment;
 
-    private Long parentComment;
-
-
     @Builder
-    public CommentDto(String comment, Long parentComment){
+    public CommentUpdateDto(String comment){
         this.comment = comment;
-        this.parentComment = parentComment;
-
     }
 }

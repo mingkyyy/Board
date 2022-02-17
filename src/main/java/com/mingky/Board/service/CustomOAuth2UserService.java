@@ -42,7 +42,7 @@ public class CustomOAuth2UserService implements OAuth2UserService {
         String email = attributes.getEmail();
         Member member = memberRepository.findByEmail(email).map(entity -> {
             // 지금 oauth로 인증들어온 유저가 이미 DB에 있는 기존회원인 경우
-            entity.setName(attributes.getName());
+            entity.findName(attributes.getName());
             return entity;
         }).orElse(attributes.toMember()); // 신규회원인 경우
 

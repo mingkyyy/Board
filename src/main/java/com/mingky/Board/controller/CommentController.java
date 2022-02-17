@@ -2,6 +2,7 @@ package com.mingky.Board.controller;
 
 import com.mingky.Board.domain.Member;
 import com.mingky.Board.dto.CommentDto;
+import com.mingky.Board.dto.CommentUpdateDto;
 import com.mingky.Board.service.CommentService;
 import com.mingky.Board.util.CurrentMember;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class CommentController {
     }
 
     @PutMapping("/board/comment/{id}")
-    public Long commentUpdate(@PathVariable Long id, @RequestBody CommentDto commentDto){
-        return commentService.updateComment(commentDto, id);
+    public Long commentUpdate(@PathVariable Long id, @RequestBody CommentUpdateDto commentUpdateDto){
+        return commentService.updateComment(commentUpdateDto, id);
     }
 
 }

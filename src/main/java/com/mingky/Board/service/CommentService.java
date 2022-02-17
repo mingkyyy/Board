@@ -5,6 +5,7 @@ import com.mingky.Board.domain.Comment;
 import com.mingky.Board.domain.Member;
 import com.mingky.Board.domain.Post;
 import com.mingky.Board.dto.CommentDto;
+import com.mingky.Board.dto.CommentUpdateDto;
 import com.mingky.Board.repository.CommentRepository;
 import com.mingky.Board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class CommentService {
         commentRepository.save(Comment.builder()
                         .comment(commentDto.getComment())
                         .commentWriter(member)
+                        .parentComment(commentDto.getParentComment())
                         .post(post)
                 .build());
         return id;
@@ -38,10 +40,10 @@ public class CommentService {
     }
 
     @Transactional
-    public Long updateComment(CommentDto commentDto, Long id) {
+    public Long updateComment(CommentUpdateDto commentUpdateDto, Long id) {
 
         Comment comment = commentRepository.findById(id).orElseThrow();
-        comment.update(commentDto.getComment());
+        comment.update(commentUpdateDto.getComment());
         return id;
 
     }
