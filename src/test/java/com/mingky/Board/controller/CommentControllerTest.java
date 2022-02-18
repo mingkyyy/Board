@@ -8,19 +8,14 @@ import com.mingky.Board.dto.CommentUpdateDto;
 import com.mingky.Board.repository.CommentRepository;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.repository.PostRepository;
-import com.mingky.Board.service.CommentService;
-import com.mingky.Board.service.PostService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.stereotype.Service;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,7 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -43,10 +38,6 @@ public class CommentControllerTest {
 
     private MockMvc mvc;
 
-    private ObjectMapper mapper;
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
 
     @Autowired
     private PostRepository postRepository;
@@ -89,6 +80,7 @@ public class CommentControllerTest {
     @AfterEach
     public void tearDown() throws Exception {
         commentRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
@@ -111,6 +103,59 @@ public class CommentControllerTest {
 
         List<Comment> comments = commentRepository.findAll();
         assertThat(comments.get(0).getComment()).isEqualTo(comment);
+
+    }
+
+    @Test
+    @WithMockUser(roles = "MEMBER")
+    public void 댓글_삭제() throws Exception{
+                commentRepository.save(Comment.builder()
+                        .comment("댓글")
+                        .parentComment(-1L)
+                        .commentWriter(memberRepository.findAll().get(0))
+                        .post(postRepository.findAll().get(0))
+                .build());
+
+                Long commentId = commentRepository.findAll().get(0).getId();
+
+                String url = "http://localhost:" + port + "/board/comment/" + commentId;
+
+                mvc.perform(MockMvcRequestBuilders.delete(url))
+                        .andExpect(status().isOk());
+
+                List<Comment> commentList = commentRepository.findAll();
+                assertThat(commentList.isEmpty());
+    }
+
+    @Test
+    @WithMockUser(roles="MEMBER")
+    public void 댓글_수정()throws Exception{
+
+        commentRepository.save(Comment.builder()
+                .comment("댓글")
+                .parentComment(-1L)
+                .commentWriter(memberRepository.findAll().get(0))
+                .post(postRepository.findAll().get(0))
+                .build());
+
+        Long commentId = commentRepository.findAll().get(0).getId();
+
+        String newComment = "새로운 댓글";
+
+        CommentUpdateDto commentUpdateDto = CommentUpdateDto.builder()
+                .comment(newComment)
+                .build();
+
+        String url = "http://localhost:" + port + "/board/comment/" +commentId;
+
+        mvc.perform(MockMvcRequestBuilders.put(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().registerModule(new JavaTimeModule())
+                        .writeValueAsString(commentUpdateDto))
+        ).andExpect(status().isOk());
+
+        Comment comment = commentRepository.findAll().get(0);
+        assertThat(comment.getComment()).isEqualTo(newComment);
 
     }
 }
