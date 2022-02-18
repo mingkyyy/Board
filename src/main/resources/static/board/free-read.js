@@ -1,5 +1,5 @@
 $(function () {
-  
+
 
     $(".like").click(function () { // 좋아요 하는 기능
         let id = $(this).val();
@@ -47,6 +47,7 @@ $(function () {
             $('#updateDiv' + id).css("display", "none");
         }
     });
+
 
 
 

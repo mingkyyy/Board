@@ -43,7 +43,7 @@ public class Post extends BaseTimeEntity{
     @Column
     private int hit;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post" , cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "imagePost")

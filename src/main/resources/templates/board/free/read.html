@@ -126,6 +126,7 @@
                               th:id="commentText + ${comment.id}"></span>
                     </div>
 
+                    <!--                    댓글 수정 폼-->
                     <div class="input-group mb-3" style="display: none" th:id="updateDiv + ${comment.id}">
                         <input type="text" class="form-control" th:value="${comment.comment}"
                                th:id="commentUpdateValue + ${comment.id}" name="commentUpdate">
@@ -134,31 +135,33 @@
                         </button>
                     </div>
 
-
                     <!--  대댓글-->
                     <th:block th:each="subComment : ${post.comments}">
                         <div th:if="${subComment.parentComment} == ${comment.id}" style="margin-bottom: 10px;">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 18px; font-weight: 540;"
-                                                                 th:text="${comment.commentWriter.nickname}"></span>
+                                                                       th:text="${comment.commentWriter.nickname}"></span>
                             &nbsp;&nbsp;&nbsp;  <span style="color: lightgray"
-                                                                 th:text="${#temporals.format(comment.modifiedDate,'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                      th:text="${#temporals.format(comment.modifiedDate,'yyyy-MM-dd HH:mm:ss')}"></span>
                             <input type="hidden" th:value="${comment.id}" th:id="hiddenComment">
 
                             &nbsp;
+
+                            <!--                            대댓글 수정 삭제-->
                             <span th:if="${comment.commentWriter.id} == ${member.id}">
-                        <button type="button" th:id="deleteComment" th:value="${comment.id}" class="deleteComment"
+                        <button type="button" th:id="deleteComment" th:value="${subComment.id}" class="deleteComment"
                                 style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
                             &nbsp;|&nbsp;
 
-                           <button type="button" th:id="updateComment" th:value="${comment.id}" class="updateComment"
+                           <button type="button" th:id="updateComment" th:value="${subComment.id}" class="updateComment"
                                    style="background-color: transparent; border: 0; outline: 0; color: red">수정</button>
                     </span>
                             <br>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="word-wrap:break-word;"
-                                                                 th:text="${subComment.comment}"
-                                                                 th:id="commentText + ${comment.id}"></span>
+                                                                       th:text="${subComment.comment}"
+                                                                       th:id="commentText + ${subComment.id}"></span>
                             <br>
                         </div>
+
 
                     </th:block>
 
