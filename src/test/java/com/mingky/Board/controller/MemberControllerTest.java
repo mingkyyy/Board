@@ -10,37 +10,26 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
 public class MemberControllerTest {
+
+    @LocalServerPort
+    private int port;
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -48,12 +37,15 @@ public class MemberControllerTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private MemberService memberService;
+
 
     @Autowired
     private WebApplicationContext context;
 
-    @Autowired
-    private MockMvc mockMvc;
+
+    private MockMvc mvc;
 
     @AfterEach
     public void cleanMember() throws Exception{
@@ -62,45 +54,58 @@ public class MemberControllerTest {
 
     @BeforeEach
     public void createRepository() throws Exception{
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(this.context)
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
-        Member member = Member.builder()
-                .name("mingkyy")
-                .email("test@test.com")
-                .nickname("mi")
-                .password(passwordEncoder.encode("12345"))
-                .tel("01000000000")
-                .memberType(MemberType.ROLE_MEMBER)
-                .build();
 
-        memberRepository.save(member);
     }
 
 
 
     @Test
+    @Transactional
     public void 회원가입_테스트() throws Exception{
         String email = "test@test.com";
         String name = "mingkyy";
-        String password="12345";
+        String password="test12345!";
         String nickname="mi";
+        String tel = "01012341234";
 
-        List<Member> all = memberRepository.findAll();
-        assertThat(all.get(1).getEmail()).isEqualTo(email);
-        assertThat(all.get(1).getName()).isEqualTo(name);
-        assertThat(passwordEncoder.matches(password, all.get(1).getPassword()));
-        assertThat(all.get(1).getNickname()).isEqualTo(nickname);
+
+        SignupDto signupDto = SignupDto.builder()
+                .email(email)
+                .nickname(nickname)
+                .password(password)
+                .tel(tel)
+                .name(name)
+                .build();
+
+
+        Member member = memberService.save(signupDto);
+
+        assertThat(member.getNickname()).isEqualTo(nickname);
+        assertThat(member.getName()).isEqualTo(name);
+        assertThat(member.getEmail()).isEqualTo(email);
+
+
     }
 
     @Test
     public void 로그인_테스트() throws Exception{
 
+        memberRepository.save(Member.builder()
+                        .email("test@test.com")
+                        .password(passwordEncoder.encode("12345"))
+                        .name("test")
+                        .nickname("testnickname")
+                        .memberType(MemberType.ROLE_MEMBER)
+                .build());
+
         String username = "test@test.com";
         String password = "12345";
 
-        mockMvc.perform(formLogin()
+        mvc.perform(formLogin()
                         .user(username)
                         .password(password))
                 .andDo(print())
@@ -108,7 +113,6 @@ public class MemberControllerTest {
                 .andExpect(redirectedUrl("/"));
 
     }
-
 
 
 }

@@ -19,8 +19,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +34,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.http.RequestEntity.post;
-import static org.springframework.http.RequestEntity.put;
+import static org.springframework.http.RequestEntity.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -43,10 +48,10 @@ public class PostControllerTest {
 
     private MockMvc mvc;
 
-    private ObjectMapper mapper;
-
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    private WebApplicationContext context;
+
+
 
     @Autowired
     private PostRepository postRepository;
@@ -66,9 +71,10 @@ public class PostControllerTest {
 
     @BeforeEach
     public void setup() {
-        this.mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
 
         Member member = Member.builder()
                 .name("mingkyy")
@@ -89,9 +95,7 @@ public class PostControllerTest {
 
     @Test
     @Transactional
-    public void 자우게시판_등록() throws Exception {
-
-
+    public void 게시물_등록() throws Exception {
         String title = "title";
         String content = "content";
 
@@ -104,10 +108,7 @@ public class PostControllerTest {
                 .member(memberList.get(0))
                 .build();
 
-        postService.freeSave(freeWriteDto);
-
         String url = "http://localhost:" + port + "/free/write";
-
 
         mvc.perform(MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -115,53 +116,51 @@ public class PostControllerTest {
                         .writeValueAsString(freeWriteDto))
         ).andExpect(status().isOk());
 
-        List<Post> posts = postRepository.findAll();
-        Post post = posts.get(posts.size() - 1);
+        Post post = postRepository.findAll().get(0);
 
         assertThat(post.getTitle()).isEqualTo(title);
         assertThat(post.getContent()).isEqualTo(content);
     }
 
     @Test
-    @Transactional
+    @WithMockUser(roles="MEMBER")
     public void 게시물_삭제() throws Exception {
         List<Member> memberList = memberRepository.findAll();
 
-        Post post = postRepository.save(Post.builder()
+        postRepository.save(Post.builder()
                 .title("title")
                 .content("content")
                 .category(Category.FREE)
+                .write(memberList.get(0))
                 .build());
 
-        post.setWrite(memberList.get(0));
-        postRepository.save(post);
+        Long postId = postRepository.findAll().get(0).getId();
 
-        Long id = post.getId();
+        String url = "http://localhost:" + port + "/board/free/read/" + postId;
 
-        String url = "http://localhost:" + port + "/board/free/read/" + id;
+        mvc.perform(MockMvcRequestBuilders.delete(url))
+                .andExpect(status().isOk());
 
-        HttpEntity<Post> savedEntity = new HttpEntity<>(post);
-
-        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, savedEntity, Long.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        List<Post> postList = postRepository.findAll();
+        assertThat(postList.isEmpty());
 
 
     }
 
     @Test
+    @WithMockUser(roles="MEMBER")
     public void 게시물_수정() throws  Exception{
         List<Member> memberList = memberRepository.findAll();
-        Post post = postRepository.save(Post.builder()
+
+        postRepository.save(Post.builder()
                 .title("title")
                 .content("content")
                 .category(Category.FREE)
+                .write(memberList.get(0))
                 .build());
 
-        post.setWrite(memberList.get(0));
-        postRepository.save(post);
+        Long postId = postRepository.findAll().get(0).getId();
 
-        Long updateId = post.getId();
         String newTitle = "newTitle";
         String newContent = "newContent";
 
@@ -171,7 +170,7 @@ public class PostControllerTest {
                 .content(newContent)
                 .build();
 
-        String url = "http://localhost:"+port+"/board/free/read/"+updateId;
+        String url = "http://localhost:"+port+"/board/free/read/"+postId;
 
         mvc.perform(MockMvcRequestBuilders.put(url)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -180,8 +179,8 @@ public class PostControllerTest {
         ).andExpect(status().isOk());
 
         List<Post> all = postRepository.findAll();
-        assertThat(all.get(all.size()-1).getTitle()).isEqualTo(newTitle);
-        assertThat(all.get(all.size()-1).getContent()).isEqualTo(newContent);
+        assertThat(all.get(0).getTitle()).isEqualTo(newTitle);
+        assertThat(all.get(0).getContent()).isEqualTo(newContent);
 
     }
 }
