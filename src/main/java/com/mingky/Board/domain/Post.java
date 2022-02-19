@@ -46,14 +46,11 @@ public class Post extends BaseTimeEntity{
     @OneToMany(mappedBy = "post" , cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "imagePost")
-    private List<File> uploadFile;
 
     @PostLoad
     public void createList() {
         if (comments == null) comments = new ArrayList<>();
         if (likers == null) likers = new ArrayList<>();
-        if (uploadFile == null) uploadFile = new ArrayList<>();
     }
 
     public void update(String title, String content){
