@@ -39,21 +39,7 @@
 
                     <li th:if="${member != null}" class="nav-item" th:classappend="${activeTab == 'mypage'} ? active"
                         sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{'/mypage/' + ${member.nickname}}" th:text="${member.nickname}">내
-                            정보</a>
-                    </li>
-
-                    <li class="nav-item dropdown"  th:classappend="${activeTab == 'animal'} ? active">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown"
-                           aria-haspopup="true">반려동물 자랑</a>
-                        <div class="dropdown-menu"  >
-                            <a th:href="@{/board/animal/all}" class="dropdown-item">전체</a>
-                            <div class="dropdown-divider"></div>
-                            <a th:href="@{/board/animal/dog}" class="dropdown-item" >강아지</a>
-                            <a th:href="@{/board/animal/cat}"  class="dropdown-item" >고양이</a>
-                            <a th:href="@{/board/animal/ham}" class="dropdown-item" >햄스터</a>
-                            <a th:href="@{/board/animal/other}" class="dropdown-item">기타</a>
-                        </div>
+                        <a class="nav-link" th:href="@{'/mypage/' + ${member.email}}">내 정보</a>
                     </li>
 
                     <li class="nav-item" th:classappend="${activeTab == 'free'} ? active">

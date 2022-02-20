@@ -82,4 +82,17 @@ public class MemberService implements UserDetailsService {
             System.out.println(e.getCode());
         }
     }
+
+    @Transactional
+    public String updateNickname(Long id,String nickname) {
+        Member member = memberRepository.findById(id).orElseThrow();
+
+        if ( memberRepository.existsByNickname(nickname) == true ){
+            return "duplicate";
+        } else {
+            member.changeNickname(nickname);
+           return "ok";
+        }
+
+    }
 }

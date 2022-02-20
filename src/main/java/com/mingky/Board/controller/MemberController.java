@@ -1,8 +1,10 @@
 package com.mingky.Board.controller;
 
+import com.mingky.Board.domain.Member;
 import com.mingky.Board.dto.SignupDto;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.service.MemberService;
+import com.mingky.Board.util.CurrentMember;
 import com.mingky.Board.util.JoinValidator;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @RequiredArgsConstructor
@@ -35,6 +39,27 @@ public class MemberController {
         System.out.println("인증번호 : " + numStr);
         memberService.certifiedPhoneNumber(phoneNumber, numStr);
         return numStr;
+
+    }
+
+    @PutMapping("/nicknameChange/{id}")
+    public Object nicknameUpdate(@PathVariable Long id,@RequestParam("nickname") String nickname){
+        Map<String, Object> map = new HashMap<>();
+        String result = "실패, 다시 시도해주세요";
+        switch (memberService.updateNickname(id ,nickname)){
+            case "duplicate":
+                result="중복된 닉네임 입니다.";
+                break;
+
+            case "ok":
+                result = "닉네임 수정 완료되었습니다.";
+                break;
+        }
+        map.put("result", result);
+
+
+        return map;
+
 
     }
 

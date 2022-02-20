@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -45,32 +42,32 @@ public class MainController {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    @PostConstruct
-    @Transactional
-    public void createPost(){
-        Member member = Member.builder()
-                .name("홍길동")
-                .email("test@gmail.com")
-                .password(passwordEncoder.encode("test12345!"))
-                .tel("0100000")
-                .nickname("테스트")
-                .memberType(MemberType.ROLE_MEMBER)
-                .build();
-
-        memberRepository.save(member);
-
-        for (int i =0; i<30; i++) {
-            Post post = Post.builder()
-                    .title((i+1)+"번째 제목")
-                    .content((i+1)+"번째 내용")
-                    .write(memberRepository.getById(1l))
-                    .category(Category.FREE)
-                    .build();
-
-            postRepository.save(post);
-        }
-
-    }
+//    @PostConstruct
+//    @Transactional
+//    public void createPost(){
+//        Member member = Member.builder()
+//                .name("홍길동")
+//                .email("test@gmail.com")
+//                .password(passwordEncoder.encode("test12345!"))
+//                .tel("0100000")
+//                .nickname("테스트")
+//                .memberType(MemberType.ROLE_MEMBER)
+//                .build();
+//
+//        memberRepository.save(member);
+//
+//        for (int i =0; i<30; i++) {
+//            Post post = Post.builder()
+//                    .title((i+1)+"번째 제목")
+//                    .content((i+1)+"번째 내용")
+//                    .write(memberRepository.getById(1l))
+//                    .category(Category.FREE)
+//                    .build();
+//
+//            postRepository.save(post);
+//        }
+//
+//    }
 
     @InitBinder("signupDto")
     protected void initBinder(WebDataBinder dataBinder) {
@@ -104,16 +101,6 @@ public class MainController {
         return "member/login";
     }
 
-    @GetMapping("/mypage/{nickname}")
-    public String mypage(Model model, @CurrentMember Member member,
-                         @PathVariable String nickname){
-
-        if (member == null || !member.getNickname().equals(nickname)){
-            return "redirect:/";
-        }
-        model.addAttribute("member", member);
-        return "member/mypage";
-    }
 
     @GetMapping("/board/free")
     public String freeBoard(@CurrentMember Member member, Model model,
@@ -154,5 +141,19 @@ public class MainController {
         model.addAttribute("post", post);
         return "/board/free/update";
     }
+
+    @GetMapping("/mypage/{email}")
+    public String mypage(Model model, @CurrentMember Member member,
+                         @PathVariable String email){
+
+        if (member == null || !member.getEmail().equals(email)){
+            return "redirect:/";
+        }
+
+        member = memberRepository.findByEmail(email).orElseThrow();
+        model.addAttribute("member", member);
+        return "member/mypage";
+    }
+
 
 }

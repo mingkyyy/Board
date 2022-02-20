@@ -62,4 +62,8 @@ public class Member {
         this.name = name;
     }
 
+    public void changeNickname(String nickname){
+        this.nickname = nickname;
+    }
+
 }
