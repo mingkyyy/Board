@@ -1,4 +1,69 @@
 $(function () {
+
+
+    $('#telupdate').click(function () {
+        let id = $(this).val();
+        if ($('#phoneDiv' + id).css("display") == "none") {
+            $('#phoneDiv' + id).css("display", "");
+        } else {
+            $('#phoneDiv' + id).css("display", "none");
+        }
+    });
+
+    $('#sendPhoneNumber').click(function () {
+
+        let id = $('#memberId').val();
+        let phoneNumber = $('#tel').val();
+
+        let regexp = /[^0-9]/gi;
+
+        if (regexp.test(phoneNumber)){
+            alert("숫자만 입력해주세요");
+             return;
+        }
+
+        if (phoneNumber == '') {
+            alert("핸드폰 번호를 입력해주세요")
+            return;
+        }
+        alert("인증번호가 전송되었습니다");
+        $.ajax({
+            type: "GET",
+            url: "/check/sendSMS",
+            data: {
+                "phoneNumber": phoneNumber
+            },
+            success: function (res) {
+                $('#checkBtn').click(function () {
+                    if ($.trim(res) == $('#inputCertifiedNumber').val()) {
+                        $('#hidden').val("zzz");
+
+                        $.ajax({
+                            type: 'PUT',
+                            url: '/phoneChange/' + id,
+                            dataType: 'json',
+                            data: {
+                                tel: phoneNumber
+                            },
+                            success: function (data) {
+                                if (data.result == "번호 수정이 완료되었습니다.") {
+                                    alert(data.result);
+                                    $('#tel').html(data);
+                                } else if (data.result == "중복된 번호 입니다.") {
+                                    alert(data.result);
+                                } else {
+                                    alert(data.result);
+                                }
+                            }
+                        });
+                    } else {
+                        alert("인증번호가 다릅니다.");
+                    }
+                })
+            }
+        });
+    });
+
     $('#nicknameUpdate').click(function () {
 
         let nickname = $('#nickname').val()
@@ -13,10 +78,10 @@ $(function () {
 
         $.ajax({
             type: 'PUT',
-            url: '/nicknameChange/'+id,
+            url: '/nicknameChange/' + id,
             dataType: 'json',
             data: {
-              nickname : nickname
+                nickname: nickname
             },
             success: function (data) {
                 if (data.result == "닉네임 수정 완료되었습니다.") {
@@ -24,10 +89,10 @@ $(function () {
                     $('#nickname').html(data);
                 } else if (data.result == "중복된 닉네임 입니다.") {
                     alert(data.result);
-                }else {
+                } else {
                     alert(data.result);
                 }
             }
         });
-        });
     });
+});

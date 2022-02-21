@@ -95,4 +95,17 @@ public class MemberService implements UserDetailsService {
         }
 
     }
+
+    @Transactional
+    public String updateTel(Long id,String tel) {
+        Member member = memberRepository.findById(id).orElseThrow();
+
+        if ( memberRepository.existsByTel(tel) == true ){
+            return "duplicate";
+        } else {
+            member.changeTel(tel);
+            return "ok";
+        }
+
+    }
 }

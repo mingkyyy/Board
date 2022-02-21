@@ -56,12 +56,27 @@ public class MemberController {
                 break;
         }
         map.put("result", result);
-
-
         return map;
-
-
     }
+
+
+    @PutMapping("/phoneChange/{id}")
+    public Object telUpdate(@PathVariable Long id,@RequestParam("tel") String tel){
+        Map<String, Object> map = new HashMap<>();
+        String result = "실패, 다시 시도해주세요";
+        switch (memberService.updateTel(id ,tel)){
+            case "duplicate":
+                result="중복된 번호 입니다.";
+                break;
+
+            case "ok":
+                result = "번호 수정 완료되었습니다.";
+                break;
+        }
+        map.put("result", result);
+        return map;
+    }
+
 
 
 
