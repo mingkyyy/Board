@@ -1,5 +1,25 @@
 $(function () {
 
+    $('#memberDelete').click(function (){
+        let id = $(this).val();
+
+        if (confirm("회원 탈퇴 하시겠습니까?")){
+            $.ajax({
+                type: 'DELETE',
+                url: '/member/delete/' + id,
+                dataType: 'json',
+            }).done(function (){
+                alert("회원탈퇴 완료 되었습니다.");
+                window.location.href = '/';
+            }).fail(function (error){
+                alert(JSON.stringify(error))
+            })
+
+        }else {
+
+        }
+    });
+
 
     $('#telupdate').click(function () {
         let id = $(this).val();

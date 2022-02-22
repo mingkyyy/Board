@@ -1,6 +1,7 @@
 package com.mingky.Board.repository;
 
 import com.mingky.Board.domain.Category;
+import com.mingky.Board.domain.Member;
 import com.mingky.Board.domain.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,4 +14,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     Page<Post> findByCategory(Category free, Pageable pageable);
+
+    Page<Post> findByWrite(Member member, Pageable pageable);
 }

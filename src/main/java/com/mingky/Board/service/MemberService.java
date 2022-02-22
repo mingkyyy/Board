@@ -1,8 +1,11 @@
 package com.mingky.Board.service;
 
+import com.mingky.Board.domain.Comment;
 import com.mingky.Board.domain.Member;
 import com.mingky.Board.domain.MemberType;
+import com.mingky.Board.domain.Post;
 import com.mingky.Board.dto.SignupDto;
+import com.mingky.Board.repository.CommentRepository;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.util.MemberUser;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
+    private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public Member save(SignupDto signupDto) {
@@ -107,5 +113,28 @@ public class MemberService implements UserDetailsService {
             return "ok";
         }
 
+    }
+
+    public Long deleteMember(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow();
+        List<Comment> commentList = member.getComments();
+        List<Post> postList =  member.getLike();
+
+        if (commentList != null){
+            for (int i =0; i<commentList.size(); i++){
+                commentRepository.delete(commentList.get(i));
+            }
+        }
+
+        if (postList != null){
+            for (int i =0; i<postList.size(); i++){
+               member.getLike().remove(postList.get(i));
+            }
+        }
+
+
+        memberRepository.delete(member);
+        SecurityContextHolder.clearContext();
+        return id;
     }
 }

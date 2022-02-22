@@ -42,32 +42,31 @@ public class MainController {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-//    @PostConstruct
-//    @Transactional
-//    public void createPost(){
-//        Member member = Member.builder()
-//                .name("홍길동")
-//                .email("test@gmail.com")
-//                .password(passwordEncoder.encode("test12345!"))
-//                .tel("0100000")
-//                .nickname("테스트")
-//                .memberType(MemberType.ROLE_MEMBER)
-//                .build();
-//
-//        memberRepository.save(member);
-//
-//        for (int i =0; i<30; i++) {
-//            Post post = Post.builder()
-//                    .title((i+1)+"번째 제목")
-//                    .content((i+1)+"번째 내용")
-//                    .write(memberRepository.getById(1l))
-//                    .category(Category.FREE)
-//                    .build();
-//
-//            postRepository.save(post);
-//        }
-//
-//    }
+    @PostConstruct
+   @Transactional
+    public void createPost(){
+        Member member = Member.builder()
+                .name("홍길동")
+                .email("test@gmail.com")
+                .password(passwordEncoder.encode("test12345!"))
+                .tel("0100000")
+                .nickname("테스트")
+                .memberType(MemberType.ROLE_MEMBER)
+                .build();
+
+        memberRepository.save(member);
+
+        for (int i =0; i<30; i++) {
+            Post post = Post.builder()
+                    .title((i+1)+"번째 제목")
+                    .content((i+1)+"번째 내용")
+                    .write(memberRepository.getById(1l))
+                    .category(Category.FREE)
+                    .build();
+
+           postRepository.save(post);
+        }
+   }
 
     @InitBinder("signupDto")
     protected void initBinder(WebDataBinder dataBinder) {
@@ -153,6 +152,29 @@ public class MainController {
         member = memberRepository.findByEmail(email).orElseThrow();
         model.addAttribute("member", member);
         return "member/mypage";
+    }
+
+
+    @GetMapping("/mypage/write/{email}")
+    public String myWrite(Model model,@CurrentMember Member member, @PathVariable String email,
+                          @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+        if (member == null || !member.getEmail().equals(email)){
+            return "redirect:/";
+        }
+        member = memberRepository.findByEmail(email).orElseThrow();
+        Page<Post> posts = postService.findWritePage(member, pageable);
+
+
+
+        model.addAttribute("pageable", pageable);
+
+        int startPage = Math.max(1, posts.getPageable().getPageNumber() - 5);
+        int endPage = Math.min(posts.getTotalPages(), posts.getPageable().getPageNumber() + 5);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("member", member);
+        model.addAttribute("posts", posts);
+        return "/member/mywrite";
     }
 
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -76,6 +77,13 @@ public class MemberController {
         map.put("result", result);
         return map;
     }
+
+    @DeleteMapping("/member/delete/{id}")
+    public Long memeberDelete(@PathVariable Long id){
+        return memberService.deleteMember(id);
+    }
+
+
 
 
 
