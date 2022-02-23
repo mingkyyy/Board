@@ -2,16 +2,13 @@ package com.mingky.Board.controller;
 
 import com.google.gson.JsonObject;
 import com.mingky.Board.domain.Member;
-import com.mingky.Board.dto.CommentDto;
 import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.PostRepository;
-import com.mingky.Board.service.CommentService;
 import com.mingky.Board.service.PostService;
 import com.mingky.Board.util.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +25,6 @@ public class PostController {
 
     private final PostService postService;
     private final PostRepository postRepository;
-    private final CommentService commentService;
 
     @PostMapping("/free/write")
     public Long freeSave(@RequestBody FreeWriteDto freeWriteDto, @CurrentMember Member member) {
@@ -58,37 +54,37 @@ public class PostController {
     }
 
     @PutMapping("/board/free/read/{id}")
-    public Long freeUpdate(@RequestBody FreeUpdateDto freeUpdateDto, @PathVariable Long id){
+    public Long freeUpdate(@RequestBody FreeUpdateDto freeUpdateDto, @PathVariable Long id) {
         return postService.update(freeUpdateDto, id);
     }
 
     @DeleteMapping("/board/free/read/{id}")
-    public Long boardDelete(@PathVariable Long id){
+    public Long boardDelete(@PathVariable Long id) {
         postService.delete(id);
         return id;
     }
 
-    @PostMapping(value="/uploadSummernoteImageFile", produces = "application/json")
+    @PostMapping(value = "/uploadSummernoteImageFile", produces = "application/json")
     public JsonObject uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile) {
 
         JsonObject jsonObject = new JsonObject();
 
-        String fileRoot = "D:\\summernote_image\\";	//저장될 외부 파일 경로
-        String originalFileName = multipartFile.getOriginalFilename();	//오리지날 파일명
-        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
+        String fileRoot = "D:\\summernote_image\\";    //저장될 외부 파일 경로
+        String originalFileName = multipartFile.getOriginalFilename();    //오리지날 파일명
+        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));    //파일 확장자
 
-        String savedFileName = UUID.randomUUID() + extension;	//저장될 파일 명
+        String savedFileName = UUID.randomUUID() + extension;    //저장될 파일 명
 
         File targetFile = new File(fileRoot + savedFileName);
 
         try {
             InputStream fileStream = multipartFile.getInputStream();
-            FileUtils.copyInputStreamToFile(fileStream, targetFile);	//파일 저장
-            jsonObject.addProperty("url", "/summernoteImage/"+savedFileName);
+            FileUtils.copyInputStreamToFile(fileStream, targetFile);    //파일 저장
+            jsonObject.addProperty("url", "/summernoteImage/" + savedFileName);
             jsonObject.addProperty("responseCode", "success");
 
         } catch (IOException e) {
-            FileUtils.deleteQuietly(targetFile);	//저장된 파일 삭제
+            FileUtils.deleteQuietly(targetFile);    //저장된 파일 삭제
             jsonObject.addProperty("responseCode", "error");
             e.printStackTrace();
         }

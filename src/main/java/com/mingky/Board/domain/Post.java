@@ -38,8 +38,6 @@ public class Post extends BaseTimeEntity{
    @Enumerated(EnumType.STRING)
     private Category category;
 
-    private int report;
-
     @Column
     private int hit;
 

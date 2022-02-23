@@ -44,6 +44,7 @@ public class Member {
     @OneToMany(mappedBy = "commentWriter", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Post> like;
 

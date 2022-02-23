@@ -98,4 +98,9 @@ public class PostService {
     }
 
 
+    public Page<Post> findWritePage(Member member, Pageable pageable) {
+        return postRepository.findByWrite(member, pageable);
+
+    }
+
 }
