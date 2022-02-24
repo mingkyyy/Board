@@ -177,6 +177,15 @@ public class MainController {
         return "/member/mywrite";
     }
 
+    @GetMapping("/report/{id}")
+    public String report(Model model, @PathVariable Long id){
+        Post post = postRepository.findById(id).orElseThrow();
+
+        model.addAttribute("post", post);
+        return "/member/report";
+    }
+
+
 
 
 }

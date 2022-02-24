@@ -2,9 +2,12 @@ package com.mingky.Board.controller;
 
 import com.google.gson.JsonObject;
 import com.mingky.Board.domain.Member;
+import com.mingky.Board.domain.Post;
+import com.mingky.Board.domain.Report;
 import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.PostRepository;
+import com.mingky.Board.repository.ReportRepository;
 import com.mingky.Board.service.PostService;
 import com.mingky.Board.util.CurrentMember;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ public class PostController {
 
     private final PostService postService;
     private final PostRepository postRepository;
+    private final ReportRepository reportRepository;
 
     @PostMapping("/free/write")
     public Long freeSave(@RequestBody FreeWriteDto freeWriteDto, @CurrentMember Member member) {
@@ -90,6 +94,13 @@ public class PostController {
         }
 
         return jsonObject;
+    }
+
+    @PostMapping("/report/{id}")
+    public Long saveReport(@PathVariable Long id,@RequestParam("reportText") String reportText
+                           , @CurrentMember Member member){
+     return postService.saveReport(id, member, reportText);
+
     }
 
 }

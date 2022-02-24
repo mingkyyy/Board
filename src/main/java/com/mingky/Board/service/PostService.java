@@ -3,10 +3,12 @@ package com.mingky.Board.service;
 import com.mingky.Board.domain.Category;
 import com.mingky.Board.domain.Member;
 import com.mingky.Board.domain.Post;
+import com.mingky.Board.domain.Report;
 import com.mingky.Board.dto.FreeUpdateDto;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.repository.PostRepository;
+import com.mingky.Board.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final ReportRepository reportRepository;
 
     @Transactional
     public Long freeSave(FreeWriteDto freeWriteDto) {
@@ -103,4 +106,16 @@ public class PostService {
 
     }
 
+    public Long saveReport(Long id,Member member,String reportText) {
+        Post post = postRepository.findById(id).orElseThrow();
+
+        Report report = Report.builder()
+                .reportText(reportText)
+                .reportMember(member)
+                .reportPost(post)
+                .build();
+        reportRepository.save(report);
+
+        return id;
+    }
 }

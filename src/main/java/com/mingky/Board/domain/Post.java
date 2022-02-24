@@ -44,11 +44,15 @@ public class Post extends BaseTimeEntity{
     @OneToMany(mappedBy = "post" , cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "reportPost", cascade = CascadeType.ALL)
+    private List<Report> reportList;
+
 
     @PostLoad
     public void createList() {
         if (comments == null) comments = new ArrayList<>();
         if (likers == null) likers = new ArrayList<>();
+        if (reportList == null) reportList = new ArrayList<>();
     }
 
     public void update(String title, String content){

@@ -44,6 +44,9 @@ public class Member {
     @OneToMany(mappedBy = "commentWriter", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "reportMember", cascade = CascadeType.ALL)
+    private List<Report> reportList;
+
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Post> like;
@@ -53,6 +56,7 @@ public class Member {
         if (posts == null) posts = new ArrayList<>();
         if (like == null) like = new ArrayList<>();
         if (comments == null) comments = new ArrayList<>();
+        if (reportList == null) reportList = new ArrayList<>();
     }
 
     public void addLike(Post post) {
