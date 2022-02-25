@@ -5,6 +5,7 @@ import com.mingky.Board.dto.SignupDto;
 import com.mingky.Board.repository.CommentRepository;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.repository.PostRepository;
+import com.mingky.Board.repository.ReportRepository;
 import com.mingky.Board.service.MemberService;
 import com.mingky.Board.service.PostService;
 import com.mingky.Board.util.CurrentMember;
@@ -26,8 +27,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,6 +40,7 @@ public class MainController {
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
 
     @PostConstruct
    @Transactional
@@ -51,7 +51,7 @@ public class MainController {
                 .password(passwordEncoder.encode("test12345!"))
                 .tel("0100000")
                 .nickname("테스트")
-                .memberType(MemberType.ROLE_MEMBER)
+                .memberType(MemberType.ROLE_MANAGE)
                 .build();
 
         memberRepository.save(member);
@@ -65,6 +65,16 @@ public class MainController {
                     .build();
 
            postRepository.save(post);
+        }
+
+        for (int i =0; i<10; i++){
+            Report report = Report.builder()
+                    .reportMember(member)
+                    .reportText(i+"번째 신고")
+                    .reportPost(postRepository.getById(1l))
+                    .build();
+
+            reportRepository.save(report);
         }
    }
 
@@ -154,29 +164,6 @@ public class MainController {
         return "member/mypage";
     }
 
-
-    @GetMapping("/mypage/write/{email}")
-    public String myWrite(Model model,@CurrentMember Member member, @PathVariable String email,
-                          @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
-        if (member == null || !member.getEmail().equals(email)){
-            return "redirect:/";
-        }
-        member = memberRepository.findByEmail(email).orElseThrow();
-        Page<Post> posts = postService.findWritePage(member, pageable);
-
-
-
-        model.addAttribute("pageable", pageable);
-
-        int startPage = Math.max(1, posts.getPageable().getPageNumber() - 5);
-        int endPage = Math.min(posts.getTotalPages(), posts.getPageable().getPageNumber() + 5);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("member", member);
-        model.addAttribute("posts", posts);
-        return "/member/mywrite";
-    }
-
     @GetMapping("/report/{id}")
     public String report(Model model, @PathVariable Long id){
         Post post = postRepository.findById(id).orElseThrow();
@@ -185,7 +172,29 @@ public class MainController {
         return "/member/report";
     }
 
+    @GetMapping("/manage")
+    public String managePage(Model model, @CurrentMember Member member,
+                             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+        if (!member.getMemberType().toString().equals("ROLE_MANAGE")){
+            return "redirect:/";
+        }
+        Page<Report> reportList = reportRepository.findAll(pageable);
+        int startPage = Math.max(1, reportList.getPageable().getPageNumber() - 5);
+        int endPage = Math.min(reportList.getTotalPages(), reportList.getPageable().getPageNumber() + 5);
 
+        model.addAttribute("pageable", pageable);
+        model.addAttribute("reportList", reportList);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        return "/manage/list";
+    }
 
+    @GetMapping("/report/read/{id}")
+    public String manageRead(Model model, @PathVariable Long id){
+        Report report = reportRepository.findById(id).orElseThrow();
+        model.addAttribute("report", report);
+
+        return "/manage/reportList";
+    }
 
 }

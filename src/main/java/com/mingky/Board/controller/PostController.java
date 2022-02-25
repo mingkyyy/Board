@@ -96,11 +96,5 @@ public class PostController {
         return jsonObject;
     }
 
-    @PostMapping("/report/{id}")
-    public Long saveReport(@PathVariable Long id,@RequestParam("reportText") String reportText
-                           , @CurrentMember Member member){
-     return postService.saveReport(id, member, reportText);
-
-    }
 
 }

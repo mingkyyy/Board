@@ -106,16 +106,5 @@ public class PostService {
 
     }
 
-    public Long saveReport(Long id,Member member,String reportText) {
-        Post post = postRepository.findById(id).orElseThrow();
 
-        Report report = Report.builder()
-                .reportText(reportText)
-                .reportMember(member)
-                .reportPost(post)
-                .build();
-        reportRepository.save(report);
-
-        return id;
-    }
 }

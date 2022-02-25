@@ -1,15 +1,14 @@
 package com.mingky.Board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mingky.Board.domain.*;
 import com.mingky.Board.dto.FreeUpdateDto;
+import org.apache.struts.mock.MockHttpSession;
 import com.mingky.Board.dto.FreeWriteDto;
 import com.mingky.Board.repository.MemberRepository;
 import com.mingky.Board.repository.PostRepository;
 import com.mingky.Board.service.PostService;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,25 +18,17 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.http.RequestEntity.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,7 +41,6 @@ public class PostControllerTest {
 
     @Autowired
     private WebApplicationContext context;
-
 
 
     @Autowired
@@ -71,6 +61,7 @@ public class PostControllerTest {
 
     @BeforeEach
     public void setup() {
+
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
@@ -123,7 +114,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(roles="MEMBER")
+    @WithMockUser(roles = "MEMBER")
     public void 게시물_삭제() throws Exception {
         List<Member> memberList = memberRepository.findAll();
 
@@ -148,8 +139,8 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(roles="MEMBER")
-    public void 게시물_수정() throws  Exception{
+    @WithMockUser(roles = "MEMBER")
+    public void 게시물_수정() throws Exception {
         List<Member> memberList = memberRepository.findAll();
 
         postRepository.save(Post.builder()
@@ -170,7 +161,7 @@ public class PostControllerTest {
                 .content(newContent)
                 .build();
 
-        String url = "http://localhost:"+port+"/board/free/read/"+postId;
+        String url = "http://localhost:" + port + "/board/free/read/" + postId;
 
         mvc.perform(MockMvcRequestBuilders.put(url)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -183,4 +174,7 @@ public class PostControllerTest {
         assertThat(all.get(0).getContent()).isEqualTo(newContent);
 
     }
+
+
+
 }
