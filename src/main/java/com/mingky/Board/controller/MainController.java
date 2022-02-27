@@ -117,6 +117,7 @@ public class MainController {
         Page<Post> freeList = postService.findCategoryPage(Category.FREE, pageable);
         model.addAttribute("freeList", freeList);
         model.addAttribute("pageable", pageable);
+        model.addAttribute("member", member);
 
         int startPage = Math.max(1, freeList.getPageable().getPageNumber() - 5);
         int endPage = Math.min(freeList.getTotalPages(), freeList.getPageable().getPageNumber() + 5);

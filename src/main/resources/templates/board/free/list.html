@@ -10,7 +10,7 @@
 <body>
 <div layout:fragment="content">
     <div class="py-5 text-center">
-        <h2>자유 게시판 ㅎㅇㅎㅇ</h2>
+        <h2>자유 게시판</h2>
     </div>
 
     <div class="container">
@@ -26,8 +26,9 @@
                     <th style="width: 10%"> #</th>
                     <th style="width: 30%"> 제목</th>
                     <th style="width: 20%"> 닉네임</th>
-                    <th style="width: 20%"> 작성일</th>
+                    <th style="width: 10%"> 좋아요 수</th>
                     <th style="width: 10%"> 조회수</th>
+                    <th style="width: 20%"> 작성일</th>
                 </tr>
                 </thead>
 
@@ -45,8 +46,9 @@
 
 
                     <td style="width: 10%"  th:text="${free.write.nickname}"></td>
-                    <td style="width: 20%"  th:text="${#temporals.format(free.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td style="width: 10%" about="" th:text="${free.likers.size()}"></td>
                     <td style="width: 10%"  th:text="${free.hit}"></td>
+                    <td style="width: 20%"  th:text="${#temporals.format(free.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
                 </tr>
 
                 </tbody>

@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/")
                 .permitAll()
 
-                .antMatchers("/board/free/**")
+                .antMatchers("/board/free/read/**","/board/free/write")
                 .authenticated()
 
                 .and()
