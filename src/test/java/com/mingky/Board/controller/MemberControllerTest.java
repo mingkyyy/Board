@@ -22,6 +22,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -169,6 +171,30 @@ public class MemberControllerTest {
 
         Member member = memberRepository.findAll().get(0);
         assertThat(member.getTel()).isEqualTo(newTel);
+
+    }
+
+    @Test
+    @WithMockUser(roles = "MEMBER")
+    public void 회원_탈퇴()throws Exception{
+        memberRepository.save(Member.builder()
+                .email("test@test.com")
+                .password(passwordEncoder.encode("12345"))
+                .name("test")
+                .nickname("testnickname")
+                .tel("01012341234")
+                .memberType(MemberType.ROLE_MEMBER)
+                .build());
+
+        Long memberId = memberRepository.findAll().get(0).getId();
+
+        String url = "http://localhost:" + port + "/member/delete/" + memberId;
+
+        mvc.perform(MockMvcRequestBuilders.delete(url)
+        ).andExpect(status().isOk());
+
+        List<Member> memberList =  memberRepository.findAll();
+        assertThat(memberList.isEmpty());
 
     }
 
